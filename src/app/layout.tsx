@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-// import { Poppins } from "next/font/google";
-
-// const poppins = Poppins({ subsets: ["latin"] });
+import { ReactQueryProvider } from "./util/reactQueryProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,8 +12,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
-    </html>
+    <ReactQueryProvider>
+      <html lang="en">
+        <body>{children}</body>
+      </html>
+    </ReactQueryProvider>
   );
 }
