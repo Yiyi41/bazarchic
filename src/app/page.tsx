@@ -144,10 +144,10 @@ export default function Home() {
               <Span>{getDate(weatherData?.current?.dt)}</Span>
             </WeatherDetails>
             <WeatherDetails>
-              <Temp>{Math.round(weatherData?.daily[0].temp.day!)} C</Temp>{" "}
+              <Temp>{Math.round(weatherData?.daily[0].temp.day!)} °C</Temp>{" "}
               <Span>
                 {Math.round(weatherData?.daily[0].temp.min!)} /{" "}
-                {Math.round(weatherData?.daily[0].temp.max!)} C
+                {Math.round(weatherData?.daily[0].temp.max!)} °C
               </Span>
               <DescirptionWithIcon>
                 <Image
@@ -194,7 +194,7 @@ export default function Home() {
               <Span>{dayWeather.weather[0].description}</Span>
               <Span>
                 {Math.round(dayWeather.temp.min)} /{" "}
-                {Math.round(dayWeather.temp.max)} C
+                {Math.round(dayWeather.temp.max)} °C
               </Span>
             </ForecastInfo>
           ))}
