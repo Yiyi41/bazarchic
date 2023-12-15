@@ -3,6 +3,7 @@ import Image from "next/image";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+require("dotenv").config();
 
 // import styled component
 import {
@@ -100,7 +101,7 @@ export default function Home() {
     queryKey: ["weatherData"],
     queryFn: () =>
       fetch(
-        "https://api.openweathermap.org/data/3.0/onecall?lat=48.866667&lon=2.333333&units=metric&exclude=hourly,minutely&appid=727bc62434f50a6a25a292925405f678"
+        `https://api.openweathermap.org/data/3.0/onecall?lat=48.866667&lon=2.333333&units=metric&exclude=hourly,minutely&appid=${process.env.NEXT_PUBLIC_OPENWEATHERMAP_API_KEY}`
       ).then((res) => res.json())
   });
 
