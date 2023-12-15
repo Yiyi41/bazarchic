@@ -185,6 +185,9 @@ export const ForecastInfo = styled.div`
 
 export const City = styled.span`
   font-size: 2.8em;
+  &::first-letter {
+    text-transform: capitalize;
+  }
   @media (max-width: 768px) {
     font-size: 2em;
   }

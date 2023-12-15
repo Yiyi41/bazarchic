@@ -25,7 +25,7 @@ import {
 } from "./components/Styles";
 
 // type import
-import { WeatherData } from "./util/types";
+import { WeatherDataType, GeometryType } from "./util/types";
 
 // make next/image responsive
 const ResponsiveImage = styled(Image)`
@@ -59,7 +59,7 @@ function IconToDispaly(weatherId: number) {
   if (weatherId > 500 && weatherId <= 531) {
     iconPath = "/assets/" + "rain" + ".svg";
   } else if ((weatherId >= 300 && weatherId <= 321) || weatherId == 500) {
-    iconPath = "/assets/" + "light-rain" + ".png";
+    iconPath = "/assets/" + "cloud-drizzle-white" + ".svg";
   } else if (weatherId >= 200 && weatherId <= 232) {
     iconPath = "/assets/" + "thunderStorm" + ".svg";
   } else if (weatherId >= 600 && weatherId <= 622) {
@@ -67,58 +67,58 @@ function IconToDispaly(weatherId: number) {
   } else if (weatherId == 800) {
     iconPath = "/assets/" + "sun" + ".svg";
   } else if (weatherId >= 801 && weatherId <= 802) {
-    iconPath = "/assets/" + "cloudy" + ".png";
+    iconPath = "/assets/" + "cloudy" + ".svg";
   } else if (weatherId >= 803 && weatherId <= 804) {
     iconPath = "/assets/" + "clouds" + ".svg";
   } else if (weatherId >= 701 && weatherId <= 781) {
-    iconPath = "/assets/" + "mist" + ".svg";
+    iconPath = "/assets/" + "mist" + ".png";
   }
 
   return iconPath;
 }
 
 export default function Home() {
-  const [weatherData, setWeatherData] = useState<WeatherData>();
+  const [weatherData, setWeatherData] = useState<WeatherDataType>();
+  const [locationData, setLocationData] = useState<GeometryType>();
   const [isLoading, setIsLoading] = useState(true);
-  const [fetchError, setFetchError] = useState("");
   const [city, setCity] = useState("");
+
+  const opencageURL = `https://api.opencagedata.com/geocode/v1/json?key=${process.env.NEXT_PUBLIC_OPENCAGE_API_KEY}&q=${city}`;
+
+  const openWeatherURL = `https://api.openweathermap.org/data/3.0/onecall?lat=${locationData?.lat}&lon=${locationData?.lng}&units=metric&exclude=hourly,minutely&appid=${process.env.NEXT_PUBLIC_OPENWEATHERMAP_API_KEY}`;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCity(encodeURIComponent(e.currentTarget.value));
   };
 
   // fetch city location from opencage api
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    try {
+      const response = await fetch(opencageURL);
+      const data = await response.json();
+      setLocationData(data.results[0].geometry);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  useEffect(() => {
-    console.log("city", city);
-  }, [city]);
-
-  // fetch weather from openweathermap api
-  const weatherQuerry = useQuery({
+  const { data } = useQuery({
     queryKey: ["weatherData"],
-    queryFn: () =>
-      fetch(
-        `https://api.openweathermap.org/data/3.0/onecall?lat=48.866667&lon=2.333333&units=metric&exclude=hourly,minutely&appid=${process.env.NEXT_PUBLIC_OPENWEATHERMAP_API_KEY}`
-      ).then((res) => res.json())
+    queryFn: () => fetch(openWeatherURL).then((res) => res.json()),
+    enabled: !!locationData
   });
 
   useEffect(() => {
-    if (weatherQuerry.data) {
-      setIsLoading(false);
-      setWeatherData(weatherQuerry.data);
-    } else if (weatherQuerry.isError) {
-      setFetchError(`An error has occurred: ${weatherQuerry.error.message}`);
+    if (data) {
+      setWeatherData(data);
+      setIsLoading(true);
     }
-  }, [weatherQuerry]);
+  }, [data]);
 
+  // get exact number of days's forecast to display
   const dailyForcast = weatherData?.daily.slice(1, 5);
-  useEffect(() => {
-    console.log("weatherData ", weatherData);
-    console.log("dailyForcast ", dailyForcast);
-  }, [weatherData, dailyForcast]);
 
   return (
     <AppContainer>
@@ -136,71 +136,71 @@ export default function Home() {
           $color="#3e95bc"
         />
       </Form>
-      <Wrapper>
-        <CurrentWeatherContainer>
-          <WeatherDetailsContainer>
-            <WeatherDetails>
-              {/* <City>{city}</City> */}
-              <City>{weatherData?.timezone}</City>
-              <Span>{getDate(weatherData?.current?.dt)}</Span>
-            </WeatherDetails>
-            <WeatherDetails>
-              <Temp>{Math.round(weatherData?.daily[0].temp.day!)} °C</Temp>{" "}
-              <Span>
-                {Math.round(weatherData?.daily[0].temp.min!)} /{" "}
-                {Math.round(weatherData?.daily[0].temp.max!)} °C
-              </Span>
-              <DescirptionWithIcon>
-                <Image
-                  src={IconToDispaly(weatherData?.daily[0].weather[0].id!)}
-                  width={30}
-                  height={30}
-                  alt="weather icon"
-                  priority
-                />
-                <Span>{weatherData?.daily[0].weather[0].description}</Span>
-              </DescirptionWithIcon>
-            </WeatherDetails>
-            <WeatherDetails>
-              <Span>
-                Wind: {Math.round(weatherData?.current.wind_speed!)} km/h
-              </Span>
-              <Span>Humidity: {weatherData?.current?.humidity} %</Span>
-            </WeatherDetails>
-          </WeatherDetailsContainer>
-          <WeatherIconContainer>
-            <ResponsiveImage
-              src={IconToDispaly(weatherData?.current?.weather[0].id!)}
-              // src={IconToDispaly(weatherData?.daily[0].weather[0].id!)}
-              width={150}
-              height={150}
-              alt="weather icon"
-              sizes="(max-width: 768px) 90px, 150px"
-              priority
-            />
-          </WeatherIconContainer>
-        </CurrentWeatherContainer>
-        <NextDaysForecastContainer>
-          {dailyForcast?.map((dayWeather, index) => (
-            <ForecastInfo key={index}>
-              <Span>{getDate(dayWeather.dt)}</Span>
-              <Span>
-                <Image
-                  src={IconToDispaly(dayWeather.weather[0].id!)}
-                  width={50}
-                  height={50}
-                  alt="weather icon"
-                />
-              </Span>
-              <Span>{dayWeather.weather[0].description}</Span>
-              <Span>
-                {Math.round(dayWeather.temp.min)} /{" "}
-                {Math.round(dayWeather.temp.max)} °C
-              </Span>
-            </ForecastInfo>
-          ))}
-        </NextDaysForecastContainer>
-      </Wrapper>
+      {weatherData && (
+        <Wrapper>
+          <CurrentWeatherContainer>
+            <WeatherDetailsContainer>
+              <WeatherDetails>
+                <City>{city}</City>
+                <Span>{getDate(weatherData?.current?.dt)}</Span>
+              </WeatherDetails>
+              <WeatherDetails>
+                <Temp>{Math.round(weatherData?.daily[0].temp.day!)} °C</Temp>{" "}
+                <Span>
+                  {Math.round(weatherData?.daily[0].temp.min!)} /{" "}
+                  {Math.round(weatherData?.daily[0].temp.max!)} °C
+                </Span>
+                <DescirptionWithIcon>
+                  <Image
+                    src={IconToDispaly(weatherData?.daily[0].weather[0].id!)}
+                    width={30}
+                    height={30}
+                    alt="weather icon"
+                    priority
+                  />
+                  <Span>{weatherData?.daily[0].weather[0].description}</Span>
+                </DescirptionWithIcon>
+              </WeatherDetails>
+              <WeatherDetails>
+                <Span>
+                  Wind: {Math.round(weatherData?.current.wind_speed!)} km/h
+                </Span>
+                <Span>Humidity: {weatherData?.current?.humidity} %</Span>
+              </WeatherDetails>
+            </WeatherDetailsContainer>
+            <WeatherIconContainer>
+              <ResponsiveImage
+                src={IconToDispaly(weatherData?.current?.weather[0].id!)}
+                width={150}
+                height={150}
+                alt="weather icon"
+                sizes="(max-width: 768px) 90px, 150px"
+                priority
+              />
+            </WeatherIconContainer>
+          </CurrentWeatherContainer>
+          <NextDaysForecastContainer>
+            {dailyForcast?.map((dayWeather, index) => (
+              <ForecastInfo key={index}>
+                <Span>{getDate(dayWeather.dt)}</Span>
+                <Span>
+                  <Image
+                    src={IconToDispaly(dayWeather.weather[0].id!)}
+                    width={50}
+                    height={50}
+                    alt="weather icon"
+                  />
+                </Span>
+                <Span>{dayWeather.weather[0].description}</Span>
+                <Span>
+                  {Math.round(dayWeather.temp.min)} /{" "}
+                  {Math.round(dayWeather.temp.max)} °C
+                </Span>
+              </ForecastInfo>
+            ))}
+          </NextDaysForecastContainer>
+        </Wrapper>
+      )}
     </AppContainer>
   );
 }
