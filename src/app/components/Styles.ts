@@ -20,11 +20,11 @@ body {
  margin: 0;
  padding: 0;
  box-sizing: border-box;
- background-image: linear-gradient(
+ /* background-image: linear-gradient(
     365deg,
     rgb(68, 144, 190),
     rgb(255, 249, 252)
-  );
+  ); */
 }
 `;
 
@@ -35,11 +35,11 @@ export const AppContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* background-image: linear-gradient(
-    360deg,
+  background-image: linear-gradient(
+    365deg,
     rgb(68, 144, 190),
-    rgb(251, 254, 241)
-  ); */
+    rgb(255, 249, 252)
+  );
 `;
 
 export const Wrapper = styled.div`
@@ -206,3 +206,35 @@ export const Span = styled.span`
     text-align: center;
   }
 `;
+
+//modal component
+
+export const ModalContainer = styled.div`
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+`;
+
+export const ModalContent = styled.div`
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+`;
+
+export const ModalClose = styled.span`
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+`;
+
+export const ModalMessage = styled.p``;
