@@ -25,19 +25,20 @@ import {
 } from "./components/Styles";
 
 // type import
-import { WeatherDataType, GeometryType } from "./util/types";
+import { WeatherDataType, GeometryType, DailyType } from "./util/types";
 
 // make next/image responsive
 const ResponsiveImage = styled(Image)`
-  width: 150px;
+  width: 185px;
   height: auto;
 
   @media screen and (max-width: 768px) {
     width: auto;
+    max-width: 185px;
   }
 `;
 
-// get date func
+// get and formate date func
 function getDate(timestamp: number | undefined) {
   let formattedDate = "";
   const options: Intl.DateTimeFormatOptions = {
@@ -71,54 +72,71 @@ function IconToDispaly(weatherId: number) {
   } else if (weatherId >= 803 && weatherId <= 804) {
     iconPath = "/assets/" + "clouds" + ".svg";
   } else if (weatherId >= 701 && weatherId <= 781) {
-    iconPath = "/assets/" + "mist" + ".png";
+    iconPath = "/assets/" + "mist" + ".svg";
   }
 
   return iconPath;
 }
 
+// get city location func
+const fetchCityLocation = async (cityName: string): Promise<GeometryType> => {
+  const response = await fetch(
+    `https://api.opencagedata.com/geocode/v1/json?key=${process.env.NEXT_PUBLIC_OPENCAGE_API_KEY}&q=${cityName}`
+  );
+  const data = await response.json();
+  return data.results[0].geometry;
+};
+
+// get weather data func
+const fetchWeater = async (
+  lat: number,
+  lng: number
+): Promise<WeatherDataType> => {
+  const response = await fetch(
+    `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lng}&units=metric&exclude=hourly,minutely&appid=${process.env.NEXT_PUBLIC_OPENWEATHERMAP_API_KEY}`
+  );
+  const data = await response.json();
+  return data;
+};
+
 export default function Home() {
   const [weatherData, setWeatherData] = useState<WeatherDataType>();
-  const [locationData, setLocationData] = useState<GeometryType>();
-  const [isLoading, setIsLoading] = useState(true);
+  const [dailyForcast, setDailyForcast] = useState<DailyType[]>();
+  const [inputValue, setInputValue] = useState("");
   const [city, setCity] = useState("");
 
-  const opencageURL = `https://api.opencagedata.com/geocode/v1/json?key=${process.env.NEXT_PUBLIC_OPENCAGE_API_KEY}&q=${city}`;
-
-  const openWeatherURL = `https://api.openweathermap.org/data/3.0/onecall?lat=${locationData?.lat}&lon=${locationData?.lng}&units=metric&exclude=hourly,minutely&appid=${process.env.NEXT_PUBLIC_OPENWEATHERMAP_API_KEY}`;
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCity(encodeURIComponent(e.currentTarget.value));
-  };
-
-  // fetch city location from opencage api
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      const response = await fetch(opencageURL);
-      const data = await response.json();
-      setLocationData(data.results[0].geometry);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const { data } = useQuery({
-    queryKey: ["weatherData"],
-    queryFn: () => fetch(openWeatherURL).then((res) => res.json()),
-    enabled: !!locationData
+  const opencageQuery = useQuery({
+    queryKey: ["opencageData", city], // the query depends on city value
+    queryFn: () => fetchCityLocation(city),
+    enabled: !!city //the query is enabled if city value existe
   });
 
-  useEffect(() => {
-    if (data) {
-      setWeatherData(data);
-      setIsLoading(true);
-    }
-  }, [data]);
+  const weatherQuery = useQuery({
+    queryKey: ["weatherData", opencageQuery.data], // the query depends on opencageQuery.data
+    queryFn: () =>
+      fetchWeater(opencageQuery.data!.lat, opencageQuery.data!.lng),
+    enabled: !!opencageQuery.data //the query is enabled if opencageQuery.data existe
+  });
 
-  // get exact number of days's forecast to display
-  const dailyForcast = weatherData?.daily.slice(1, 5);
+  console.log(typeof opencageQuery.error);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(encodeURIComponent(e.currentTarget.value));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setCity(inputValue);
+    opencageQuery.refetch(); //refetch if input value change
+    setInputValue("");
+  };
+
+  useEffect(() => {
+    if (weatherQuery.data) {
+      setWeatherData(weatherQuery.data);
+      setDailyForcast(weatherQuery.data?.daily.slice(1, 5)); // filter data for easily displaying
+    }
+  }, [inputValue, weatherQuery.data]);
 
   return (
     <AppContainer>
@@ -126,6 +144,7 @@ export default function Home() {
       <Form onSubmit={handleSubmit}>
         <Input
           type="text"
+          value={inputValue}
           onChange={handleChange}
           placeholder="Your favrite city"
         />
@@ -136,7 +155,7 @@ export default function Home() {
           $color="#3e95bc"
         />
       </Form>
-      {weatherData && (
+      {weatherData ? (
         <Wrapper>
           <CurrentWeatherContainer>
             <WeatherDetailsContainer>
@@ -174,7 +193,7 @@ export default function Home() {
                 width={150}
                 height={150}
                 alt="weather icon"
-                sizes="(max-width: 768px) 90px, 150px"
+                sizes="(max-width: 768px) 90px, 120px"
                 priority
               />
             </WeatherIconContainer>
@@ -200,6 +219,8 @@ export default function Home() {
             ))}
           </NextDaysForecastContainer>
         </Wrapper>
+      ) : (
+        ""
       )}
     </AppContainer>
   );

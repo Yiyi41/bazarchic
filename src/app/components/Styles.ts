@@ -1,14 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 import styled from "styled-components";
 
-// .lightBlue {
-//   background-image: linear-gradient(
-//     360deg,
-//     rgb(68, 144, 190),
-//     rgb(251, 254, 241)
-//   );
-// }
-
 // .darkBlue {
 //   background-image: linear-gradient(
 //     360deg,
@@ -33,8 +25,6 @@ body {
     rgb(68, 144, 190),
     rgb(255, 249, 252)
   );
-  /* background: no-repeat; */
-
 }
 `;
 
@@ -67,6 +57,8 @@ export const Wrapper = styled.div`
 `;
 
 export const Form = styled.form`
+  width: 100%;
+  max-width: 90%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -74,6 +66,9 @@ export const Form = styled.form`
   margin-bottom: 20px;
   @media (max-width: 768px) {
     margin-bottom: 10px;
+  }
+  @media (max-width: 380px) {
+    flex-direction: column;
   }
 `;
 
@@ -91,8 +86,8 @@ export const Input = styled.input<{
   text-align: center;
 
   @media (max-width: 768px) {
-    height: 40px;
-    font-size: 1em;
+    height: 35px;
+    font-size: 0.9em;
   }
 `;
 
@@ -157,7 +152,7 @@ export const NextDaysForecastContainer = styled.div`
     border-right: 1px solid lightgray;
   }
 
-  @media (max-width: 683px) {
+  @media (max-width: 768px) {
     display: flex;
     flex-direction: column;
     align-items: inherit;
