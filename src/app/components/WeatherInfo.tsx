@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import styled from "styled-components";
 
+// import styled components
 import {
   City,
   CurrentWeatherContainer,
@@ -16,7 +17,11 @@ import {
   Wrapper
 } from "./Styles";
 
+
+// import types
 import { DailyType, WeatherDataType } from "../util/types";
+
+// import functions
 import { IconToDispaly, getDate } from "../util/functions";
 
 // make next/image responsive

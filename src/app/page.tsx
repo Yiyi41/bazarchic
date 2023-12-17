@@ -7,9 +7,13 @@ require("dotenv").config();
 // import styled component
 import { AppContainer, Form, GlobalStyle, Input } from "./components/Styles";
 
-// type import
+// import types
 import { WeatherDataType, DailyType } from "./util/types";
+
+// import ui component
 import WeatherInfo from "./components/WeatherInfo";
+
+// import fetch functions
 import { fetchCityLocation, fetchWeather } from "./util/functions";
 
 export default function Home() {
@@ -17,8 +21,9 @@ export default function Home() {
   const [dailyForcast, setDailyForcast] = useState<DailyType[]>();
   const [inputValue, setInputValue] = useState("");
   const [city, setCity] = useState("");
-  const [appTheme, setAppTheme] = useState("light");
+  const [appTheme, setAppTheme] = useState("light"); // background depends on night/day time of city
 
+  // query to recover longitude/latitude of the city
   const opencageQuery = useQuery({
     queryKey: ["opencageData", city], // the query depends on city value
     queryFn: () => fetchCityLocation(city),
@@ -26,6 +31,7 @@ export default function Home() {
     retry: false
   });
 
+  //query to recover weather from longitude/latitude
   const weatherQuery = useQuery({
     queryKey: ["weatherData", opencageQuery.data], // the query depends on opencageQuery.data
     queryFn: () =>
