@@ -84,7 +84,7 @@ export default function Home() {
             title="It was an imaginary city 😉"
             value={inputValue}
             onChange={handleChange}
-            placeholder="your favrite city"
+            placeholder="your favorite city"
           />
           <Input
             type="submit"
