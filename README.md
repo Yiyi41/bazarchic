@@ -1,6 +1,6 @@
 # Wheather App
 
-[To Visit the app 👀 ](https://bazarchic.vercel.app/) 
+[Visit the app 👀 ](https://bazarchic.vercel.app/) 
 
 ### Overview
 
