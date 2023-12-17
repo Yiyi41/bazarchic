@@ -16,6 +16,12 @@ The application is deployed on [Vercel](https://vercel.com/), providing a live p
 - React Query
 - Styled components
 
+### How to Run
+
+1. Clone the repository.
+2. Run `npm install` to install dependencies 
+3. Execute `npm run dev` to run the projet. Open [http://localhost:3000](http://localhost:3000) to view it in your browser. The page will reload when you make changes, and lint errors will be displayed in the console.
+
 ### Acknowledgements
 
 This project is a result of experimentation and practice in web development. Feel free to explore the code and provide feedback.
