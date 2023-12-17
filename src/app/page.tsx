@@ -3,23 +3,14 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 require("dotenv").config();
-import { ThemeProvider } from "styled-components";
 
 // import styled component
 import { AppContainer, Form, GlobalStyle, Input } from "./components/Styles";
 
 // type import
 import { WeatherDataType, DailyType } from "./util/types";
-import Modal from "./components/Modal";
 import WeatherInfo from "./components/WeatherInfo";
-import { fetchCityLocation, fetchWeater } from "./util/functions";
-
-export const theme = {
-  backgrounds: {
-    light: "linear-gradient(365deg, rgb(68, 144, 190), rgb(255, 249, 252))",
-    dark: "linear-gradient(365deg, rgb(85, 217, 233), rgb(18, 12, 102))"
-  }
-};
+import { fetchCityLocation, fetchWeather } from "./util/functions";
 
 export default function Home() {
   const [weatherData, setWeatherData] = useState<WeatherDataType | null>();
@@ -38,14 +29,10 @@ export default function Home() {
   const weatherQuery = useQuery({
     queryKey: ["weatherData", opencageQuery.data], // the query depends on opencageQuery.data
     queryFn: () =>
-      fetchWeater(opencageQuery.data!.lat, opencageQuery.data!.lng),
+      fetchWeather(opencageQuery.data!.lat, opencageQuery.data!.lng),
     enabled: !!opencageQuery.data, //the query is enabled if opencageQuery.data existe
     retry: false
   });
-
-  // console.log(opencageQuery.error);
-
-  console.log(weatherQuery.data);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.currentTarget.value);
@@ -63,14 +50,13 @@ export default function Home() {
     if (weatherQuery.data) {
       setWeatherData(weatherQuery.data);
       setDailyForcast(weatherQuery.data?.daily.slice(1, 5)); // narrow data for easily displaying
-      // check from api response if the current time of the city is day or night
+      // check from api response if the current time of the city is on day or on night
       if (weatherQuery.data.current.weather[0].icon.includes("n") === true)
         setAppTheme("dark");
     } else {
       setAppTheme("light");
     }
   }, [weatherQuery.data]);
-
 
   return (
     <>

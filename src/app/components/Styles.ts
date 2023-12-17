@@ -1,26 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 import styled from "styled-components";
 
-const theme = {
-  backgrounds: {
-    light: "linear-gradient(365deg, rgb(68, 144, 190), rgb(255, 249, 252))",
-    dark: "linear-gradient(365deg, rgb(85, 217, 233), rgb(18, 12, 102))"
-  }
-};
-
-// .darkBlue {
-//   background-image: linear-gradient(
-//     360deg,
-//     rgb(85, 217, 233),
-//     rgb(18, 12, 102)
-//   );
-//   color: #f3f6f8;
-// }
-
-// mobile: 683px,
-//   tablet: 992px,
-//   laptop: 1366px,
-
 export const GlobalStyle = createGlobalStyle`
 
 body {
@@ -41,15 +21,11 @@ export const AppContainer = styled.div<{ $background?: string }>`
   background: ${(props) =>
     props.$background ||
     "linear-gradient(365deg, rgb(68, 144, 190), rgb(255, 249, 252))"};
-
-  /* background: linear-gradient(365deg, rgb(85, 217, 233), rgb(18, 12, 102)); */
-  /* background: ${(props) => props.theme.backgrounds.light}; */
 `;
 
 export const Wrapper = styled.div`
   width: 800px;
   max-width: 90%;
-
   height: auto;
   padding: 15px;
   border-radius: 8px;

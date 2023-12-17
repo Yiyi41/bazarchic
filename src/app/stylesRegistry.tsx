@@ -1,3 +1,5 @@
+// fix sytled components delay loading
+
 "use client";
 
 import React, { useState } from "react";
