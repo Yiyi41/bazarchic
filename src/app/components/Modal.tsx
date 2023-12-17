@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   ModalClose,
@@ -6,6 +6,7 @@ import {
   ModalContent,
   ModalMessage
 } from "./Styles";
+import { WeatherDataType } from "../util/types";
 
 interface ModalProps {
   modalIsOpen: boolean;
@@ -13,14 +14,20 @@ interface ModalProps {
 }
 
 function Modal({ modalIsOpen, setModalIsOpen }: ModalProps) {
-  function slideModalOut() {
-    setModalIsOpen(!modalIsOpen);
-  }
+  console.log("before click", modalIsOpen);
+  const handleClose = () => {
+    console.log("clicked");
+    setModalIsOpen(false);
+  };
+
+  useEffect(() => {
+    console.log("after click", modalIsOpen);
+  }, [modalIsOpen]);
 
   return (
-    <ModalContainer>
+    <ModalContainer $display={modalIsOpen ? "auto" : "none"}>
       <ModalContent>
-        <ModalClose onClick={slideModalOut}>&times;</ModalClose>
+        <ModalClose onClick={handleClose}>&times;</ModalClose>
         <ModalMessage>Please enter an exisisting city 😉</ModalMessage>
       </ModalContent>
     </ModalContainer>

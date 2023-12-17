@@ -44,6 +44,7 @@ export function IconToDispaly(weatherId: number) {
 export const fetchCityLocation = async (
   cityName: string
 ): Promise<GeometryType> => {
+  // encodeURIComponent(cityName);
   const response = await fetch(
     `https://api.opencagedata.com/geocode/v1/json?key=${process.env.NEXT_PUBLIC_OPENCAGE_API_KEY}&q=${cityName}`
   );

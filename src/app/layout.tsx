@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ReactQueryProvider } from "./util/reactQueryProvider";
+import StyledComponentsRegistry from "./stylesRegistry";
 
 export const metadata: Metadata = {
   title: "Weather App",
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <ReactQueryProvider>
       <html lang="en">
-        <body>{children}</body>
+        <body>
+          <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+        </body>
       </html>
     </ReactQueryProvider>
   );

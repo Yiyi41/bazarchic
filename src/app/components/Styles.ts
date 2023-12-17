@@ -1,6 +1,13 @@
 import { createGlobalStyle } from "styled-components";
 import styled from "styled-components";
 
+const theme = {
+  backgrounds: {
+    light: "linear-gradient(365deg, rgb(68, 144, 190), rgb(255, 249, 252))",
+    dark: "linear-gradient(365deg, rgb(85, 217, 233), rgb(18, 12, 102))"
+  }
+};
+
 // .darkBlue {
 //   background-image: linear-gradient(
 //     360deg,
@@ -20,26 +27,23 @@ body {
  margin: 0;
  padding: 0;
  box-sizing: border-box;
- /* background-image: linear-gradient(
-    365deg,
-    rgb(68, 144, 190),
-    rgb(255, 249, 252)
-  ); */
+
 }
 `;
 
-export const AppContainer = styled.div`
+export const AppContainer = styled.div<{ $background?: string }>`
   height: 100vh;
   width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-image: linear-gradient(
-    365deg,
-    rgb(68, 144, 190),
-    rgb(255, 249, 252)
-  );
+  background: ${(props) =>
+    props.$background ||
+    "linear-gradient(365deg, rgb(68, 144, 190), rgb(255, 249, 252))"};
+
+  /* background: linear-gradient(365deg, rgb(85, 217, 233), rgb(18, 12, 102)); */
+  /* background: ${(props) => props.theme.backgrounds.light}; */
 `;
 
 export const Wrapper = styled.div`
@@ -209,32 +213,38 @@ export const Span = styled.span`
 
 //modal component
 
-export const ModalContainer = styled.div`
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+export const ModalContainer = styled.div<{
+  $display?: string;
+}>`
+  display: ${(props) => props.$display || "none"};
+  position: fixed;
+  z-index: 1;
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0, 0, 0); /* Fallback color */
-  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
 `;
 
 export const ModalContent = styled.div`
   background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
+  margin: 15% auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
+  width: 80%;
 `;
 
 export const ModalClose = styled.span`
+  cursor: pointer;
   color: #aaa;
   float: right;
-  font-size: 28px;
+  font-size: 1.5em;
   font-weight: bold;
 `;
 
-export const ModalMessage = styled.p``;
+export const ModalMessage = styled.p`
+  text-align: center;
+  font-size: 1.6em;
+`;
