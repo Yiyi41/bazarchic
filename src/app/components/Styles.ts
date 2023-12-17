@@ -25,7 +25,7 @@ export const AppContainer = styled.div<{ $background?: string }>`
 
 export const Wrapper = styled.div`
   width: 800px;
-  max-width: 90%;
+  max-width: 90vw;
   height: auto;
   padding: 15px;
   border-radius: 8px;
