@@ -23,8 +23,8 @@ This project is a result of experimentation and practice in web development. Fee
 <p align="left" >
 
 <img align="left" width="1000" src="https://res.cloudinary.com/dps4zteie/image/upload/v1702846383/Capture_d_e%CC%81cran_2023-12-17_a%CC%80_21.50.52_hrmtxp.png"/>
-</p>/>
 </p>
+
 
 
 
