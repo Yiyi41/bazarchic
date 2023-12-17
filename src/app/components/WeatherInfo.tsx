@@ -28,11 +28,6 @@ const ResponsiveImage = styled(Image)`
   width: 185px;
   height: auto;
 
-  /* @media screen and (max-width: 768px) {
-    width: auto;
-    max-width: 185px;
-  } */
-
   @media (max-width: 768px) {
     width: 120px;
     min-width: 90px;
