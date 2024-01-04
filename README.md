@@ -2,9 +2,15 @@
 
 [Visit the app 👀 ](https://bazarchic.vercel.app/) 
 
-### Overview
+### Overview: 
 
-Search your favorite city's weather and next days's forecast. App changes it's background on light or dark color depending on searched city's current time.
+Welcome to the City Weather App, a project where you can check the current weather and the forecast for the upcoming days of your favorite city. What sets this app apart is its dynamic background feature, automatically adjusting between light and dark colors based on the searched city's current time.
+
+This project represents a reiteration of a concept I initially implemented a year ago using Vanilla JavaScript. In this version, I've chosen to leverage the power of Next.js and React Query to enhance the application's architecture and streamline data fetching from two different APIs. Through this projet, I also used Styled components.
+
+
+### API
+[Opencagedata](https://opencagedata.com/) | [Openweathermap](https://openweathermap.org/)
 
 ### Deployment
 
