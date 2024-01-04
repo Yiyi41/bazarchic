@@ -15,6 +15,7 @@ The application is deployed on [Vercel](https://vercel.com/), providing a live p
 - Nextjs
 - React Query
 - Styled components
+- Typescript
 
 ### How to Run
 
